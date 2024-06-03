@@ -5,7 +5,7 @@ function App() {
   const [lecturas, setLecturas] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api')
+    axios.get('http://54.221.128.114:5000/api')
       .then(response => {
         setLecturas(response.data);
         console.log(response.data);
