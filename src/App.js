@@ -5,7 +5,7 @@ function App() {
   const [lecturas, setLecturas] = useState([]);
 
   useEffect(() => {
-    axios.get('http://54.237.203.175:5000/api')
+    axios.get('http://54.227.53.250:5000/api') //ip publica de instancia servidor
       .then(response => {
         setLecturas(response.data);
         console.log(response.data);
