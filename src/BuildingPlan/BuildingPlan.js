@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useEffect } from 'react';
 import './BuildingPlan.css';
-import { set } from 'mongoose';
 
 const BuildingPlan = () => {
   const [activeRoom, setActiveRoom] = useState(null);
   const [lecturas, setLecturas] = useState([]);
 
   useEffect(() => {
-    axios.get('http://54.227.53.250:5000/api') //ip publica de instancia servidor
+    axios.get('http://52.90.222.249:5000/api') //ip publica de instancia servidor
       .then(response => {
         setLecturas(response.data);
         console.log(response.data);
