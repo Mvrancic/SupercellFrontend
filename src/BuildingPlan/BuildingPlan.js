@@ -1,70 +1,94 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useEffect } from 'react';
 import './BuildingPlan.css';
 
 const BuildingPlan = () => {
-  const [activeRoom, setActiveRoom] = useState(null);
-  const [lecturas, setLecturas] = useState([]);
+  const [newCardId, setNewCardId] = useState('');
+  const [tipoTarjeta, setTipoTarjeta] = useState('1'); // Estado para el tipo de tarjeta
+  const [loading, setLoading] = useState(false); // Estado para indicar que se está cargando el ID de la tarjeta
+  const [waitingForCard, setWaitingForCard] = useState(true); // Estado para indicar que se está esperando que el usuario pase la tarjeta
 
-  useEffect(() => {
-    axios.get('http://52.90.222.249:5000/api') //ip publica de instancia servidor
-      .then(response => {
-        setLecturas(response.data);
-        console.log(response.data);
-        console.log(lecturas);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the data!', error);
-      });
-  }, []);
-
-  const handleRoomClick = (roomId) => {
-    if (activeRoom === roomId) {
-      setActiveRoom(null); // Ocultar registros si se hace clic en la misma puerta nuevamente
-    } else {
-      setActiveRoom(roomId);
+  const capturarIdTarjeta = async () => {
+    try {
+      // Realizar una solicitud al backend para obtener el último ID registrado
+      const response = await axios.get('http://52.90.222.249:5000/api/ultimo_id_tarjeta');
+      if (response.data && response.data.ultimo_id_tarjeta) {
+        setNewCardId(response.data.ultimo_id_tarjeta);
+        setWaitingForCard(false); // Cambiar estado para dejar de esperar la tarjeta
+      } else {
+        console.error('No se pudo obtener el ID de la tarjeta desde el servidor.');
+        // Puedes manejar aquí lo que sucede si no se encuentra el ID de tarjeta
+      }
+      // Desactivar el estado de carga
+      setLoading(false);
+    } catch (error) {
+      console.error('Error al obtener el ID de la tarjeta:', error);
     }
   };
 
-  const rooms = [
-    { id: 'cell1', name: 'Cell 1' },
-    { id: 'cell2', name: 'Cell 2' },
-    // Añade más habitaciones según sea necesario
-  ];
+  const handleReadyClick = () => {
+    // Activar la búsqueda del ID de tarjeta cuando el usuario está listo
+    setLoading(true); // Activar el estado de carga
+    capturarIdTarjeta();
+  };
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+
+    // Objeto con los datos de la nueva tarjeta RFID
+    const nuevaTarjeta = {
+      tarjeta_id: newCardId,
+      tipo: tipoTarjeta === '1' ? 'staff' : 'prisionero', // Convertir tipoTarjeta a 'staff' o 'prisionero'
+      acceso: 'pendiente', // Ajusta según tus necesidades iniciales
+      lector_id: 'RFID-1', // Ajusta el ID del lector según tu configuración
+      timestamp: new Date().toISOString() // Timestamp actual en formato ISO
+    };
+
+    // Llama al backend para agregar la nueva tarjeta RFID
+    axios.post('http://52.90.222.249:5000/api/agregar_tarjeta', nuevaTarjeta)
+      .then(response => {
+        console.log('Respuesta del servidor:', response.data);
+        // Limpiar el formulario después de agregar la tarjeta
+        setNewCardId('');
+        setWaitingForCard(true); // Volver a mostrar el mensaje inicial
+      })
+      .catch(error => {
+        console.error('Error al agregar tarjeta:', error);
+      });
+  };
 
   return (
     <div className="building">
-      {rooms.map((room) => (
-        <div key={room.id} className="room" onClick={() => handleRoomClick(room.id)}>
-          {room.name}
-          <div className="door"></div>
+      {/* Mensaje inicial para solicitar pasar la tarjeta por el lector RFID */}
+      {waitingForCard ? (
+        <div>
+          <p>Por favor, pase la tarjeta por el lector RFID...</p>
+          <button onClick={handleReadyClick}>Listo</button>
         </div>
-      ))}
-      {activeRoom && (
-        <div className="info-box">
-          <h2>Door Logs for {activeRoom}</h2>
-          <div id="log-content">
-            {activeRoom === 'cell1' && lecturas.length > 0 ? (
-              lecturas.sort((a, b)=> new Date(b.timestamp) - new Date(a.timestamp))
-              .map((lectura, index) => {
-                const date = new Date(lectura.timestamp);
-                const formattedDate = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()}`;
-                const formattedTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-                return (
-                  <div key={index}>
-                    <p>Card ID: {lectura.tarjeta_id}</p>
-                    <p>Time: {formattedTime}, Date: {formattedDate}</p>
-                    <p>Access: {lectura.acceso}</p>
-                    <hr />
-                  </div>
-                );
-              })
-            ) : (
-              <p>No logs available</p>
-            )}
-          </div>
+      ) : (
+        // Formulario para agregar nueva tarjeta
+        <div className="add-card-form">
+          <h2>Agregar Nueva Tarjeta RFID</h2>
+          <form onSubmit={handleFormSubmit}>
+            <div className="card-id-field">
+              <p>ID de Tarjeta RFID: {newCardId ? newCardId : '...'}</p>
+            </div>
+            <label htmlFor="tipoTarjeta">Tipo de Tarjeta:</label>
+            <select
+              id="tipoTarjeta"
+              name="tipoTarjeta"
+              value={tipoTarjeta}
+              onChange={(e) => setTipoTarjeta(e.target.value)}
+            >
+              <option value="1">Staff (Tipo 1)</option>
+              <option value="2">Prisionero (Tipo 2)</option>
+            </select>
+            <button type="submit">Agregar Tarjeta</button>
+          </form>
         </div>
+      )}
+      {loading && (
+        <p>Cargando...</p>
       )}
     </div>
   );
