@@ -1,13 +1,19 @@
+// App.js
 import React from 'react';
-import './App.css';
-import BuildingPlan from './BuildingPlan/BuildingPlan.js';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import BuildingPlan from './BuildingPlan/BuildingPlan';
+import Emergency from './Emergency/Emergency';
+import NewCard from './NewCard/Cards';
 
 function App() {
-
   return (
-    <div className="App">
-      <BuildingPlan />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<BuildingPlan />} />
+        <Route path="/new-card" element={<NewCard />} />
+        <Route path="/emergency" element={<Emergency />} />
+      </Routes>
+    </Router>
   );
 }
 

@@ -1,97 +1,77 @@
+// BuildingPlan.js
 import React, { useState } from 'react';
+import {ReactComponent as LockIcon} from './lock.svg';
+import { useEffect } from 'react';
+import Menu from './Menu'; 
 import axios from 'axios';
 import './BuildingPlan.css';
 
-const BuildingPlan = () => {
-  const [newCardId, setNewCardId] = useState('');
-  const [tipoTarjeta, setTipoTarjeta] = useState('1'); // Estado para el tipo de tarjeta
-  const [loading, setLoading] = useState(false); // Estado para indicar que se está cargando el ID de la tarjeta
-  const [waitingForCard, setWaitingForCard] = useState(true); // Estado para indicar que se está esperando que el usuario pase la tarjeta
+function BuildingPlan() {
+  const [loading, setLoading] = useState(false);
+  const [records, setRecords] = useState(null);
+  const [selectedDoor, setSelectedDoor] = useState(null);
+  const [lockdown, setLockdown] = useState(false);
 
-  const capturarIdTarjeta = async () => {
-    try {
-      // Realizar una solicitud al backend para obtener el último ID registrado
-      const response = await axios.get('http://52.90.222.249:5000/api/ultimo_id_tarjeta');
-      if (response.data && response.data.ultimo_id_tarjeta) {
-        setNewCardId(response.data.ultimo_id_tarjeta);
-        setWaitingForCard(false); // Cambiar estado para dejar de esperar la tarjeta
-      } else {
-        console.error('No se pudo obtener el ID de la tarjeta desde el servidor.');
-        // Puedes manejar aquí lo que sucede si no se encuentra el ID de tarjeta
-      }
-      // Desactivar el estado de carga
-      setLoading(false);
-    } catch (error) {
-      console.error('Error al obtener el ID de la tarjeta:', error);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      axios.get('http://54.197.206.2/api/emergency_lockdown')
+        .then(response => {
+          setLockdown(response.data.lockdown);
+        })
+        .catch(error => {
+          console.error('Error al obtener el estado de bloqueo de emergencia:', error);
+        });
+    }, 1000); // Actualiza el estado de bloqueo cada segundo
+
+    return () => clearInterval(interval); // Limpia el intervalo cuando el componente se desmonta
+  }, []);
+
+  const handleDoorClick = (doorNumber, e) => {
+    e.stopPropagation();
+    if (selectedDoor === doorNumber) {
+      setSelectedDoor(null);
+    } else {
+      setSelectedDoor(doorNumber);
+      setLoading(true);
+      setTimeout(fetchRecords, 2000); // Wait for 2 seconds before fetching records
     }
   };
 
-  const handleReadyClick = () => {
-    // Activar la búsqueda del ID de tarjeta cuando el usuario está listo
-    setLoading(true); // Activar el estado de carga
-    capturarIdTarjeta();
-  };
-
-  const handleFormSubmit = (event) => {
-    event.preventDefault();
-
-    // Objeto con los datos de la nueva tarjeta RFID
-    const nuevaTarjeta = {
-      tarjeta_id: newCardId,
-      tipo: tipoTarjeta === '1' ? 'staff' : 'prisionero', // Convertir tipoTarjeta a 'staff' o 'prisionero'
-      acceso: 'pendiente', // Ajusta según tus necesidades iniciales
-      lector_id: 'RFID-1', // Ajusta el ID del lector según tu configuración
-      timestamp: new Date().toISOString() // Timestamp actual en formato ISO
-    };
-
-    // Llama al backend para agregar la nueva tarjeta RFID
-    axios.post('http://52.90.222.249:5000/api/agregar_tarjeta', nuevaTarjeta)
-      .then(response => {
-        console.log('Respuesta del servidor:', response.data);
-        // Limpiar el formulario después de agregar la tarjeta
-        setNewCardId('');
-        setWaitingForCard(true); // Volver a mostrar el mensaje inicial
-      })
-      .catch(error => {
-        console.error('Error al agregar tarjeta:', error);
+  const fetchRecords = () => {
+    // Replace this with your actual backend call
+    fetch('http://54.197.206.2:5000/api/show_records') //ip publica de instancia servidor
+      .then(response => response.json())
+      .then(data => {
+        setRecords(data);
+        setLoading(false);
       });
   };
 
   return (
-    <div className="building">
-      {/* Mensaje inicial para solicitar pasar la tarjeta por el lector RFID */}
-      {waitingForCard ? (
-        <div>
-          <p>Por favor, pase la tarjeta por el lector RFID...</p>
-          <button onClick={handleReadyClick}>Listo</button>
+    <div className='grid-container' onClick={() => setSelectedDoor(null)}>
+      <Menu />
+      {[...Array(12)].map((_, i) => (
+        <div key={i} className='cell'>
+          {lockdown && <LockIcon/>}
+          <button className='door' onClick={(e) => handleDoorClick(i + 1, e)}>Door {i + 1}</button>
         </div>
-      ) : (
-        // Formulario para agregar nueva tarjeta
-        <div className="add-card-form">
-          <h2>Agregar Nueva Tarjeta RFID</h2>
-          <form onSubmit={handleFormSubmit}>
-            <div className="card-id-field">
-              <p>ID de Tarjeta RFID: {newCardId ? newCardId : '...'}</p>
+      ))}
+      {selectedDoor && (
+        <div className='animated-div' onClick={(e) => e.stopPropagation()} style={{ overflow: 'auto' }}>
+          <button onClick={() => setSelectedDoor(null)} style={{ float: 'right' }}>X</button>
+          <h2>Registro de lecturas de puerta {selectedDoor}</h2>
+          {loading ? 'Cargando...' : records.map(record => (
+            <div key={record._id} style={{ borderBottom: '1px solid black', padding: '10px' }}>
+              <p>Id de tarjeta: {record.tarjeta_id}</p>
+              <p>Tipo de tarjeta: {record.tipo}</p>
+              <p>Time: {new Date(record.time).toLocaleDateString()} {new Date(record.time).toLocaleTimeString()}</p>
+              <p>Acceso: {record.access_result}</p>
             </div>
-            <label htmlFor="tipoTarjeta">Tipo de Tarjeta:</label>
-            <select
-              id="tipoTarjeta"
-              name="tipoTarjeta"
-              value={tipoTarjeta}
-              onChange={(e) => setTipoTarjeta(e.target.value)}
-            >
-              <option value="1">Staff (Tipo 1)</option>
-              <option value="2">Prisionero (Tipo 2)</option>
-            </select>
-            <button type="submit">Agregar Tarjeta</button>
-          </form>
+          ))}
         </div>
-      )}
-      {loading && (
-        <p>Cargando...</p>
       )}
     </div>
   );
-};
+}
 
 export default BuildingPlan;

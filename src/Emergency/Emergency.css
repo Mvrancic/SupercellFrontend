@@ -1,0 +1,64 @@
+/* Emergency.css */
+.emergency {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 300px; /* Ajusta según tus necesidades */
+  }
+  
+  .emergency-button {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+    font-size: 24px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.1s;
+    box-shadow: 0 20px 10px rgba(0, 0, 0, 0.3); /* Agrega sombra */
+    border-bottom: 4px solid #b20000; /* Agrega borde inferior */
+  }
+
+ 
+  
+  .emergency-button:active {
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.3); /* Reduce la sombra cuando se presiona el botón */
+    transform: translateY(4px); /* Mueve el botón hacia abajo cuando se presiona */
+  }
+
+  
+  
+  .switch-button {
+    width: 40px; /* Aumenta el ancho */
+    height: 100px;
+    background-color: #555;
+    position: relative;
+    border-radius: 20px; /* Aumenta el radio del borde para mantener la proporción */
+    overflow: hidden;
+  }
+  
+  .switch-button:before {
+    content: "";
+    position: absolute;
+    width: 40px; /* Aumenta el ancho */
+    height: 40px; /* Aumenta la altura para mantener la proporción */
+    background-color: #333;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    transition: top 0.3s;
+  }
+  
+  .switch-button:active:before {
+    top: 60px; /* Ajusta la posición para que la palanca se mueva correctamente */
+  }

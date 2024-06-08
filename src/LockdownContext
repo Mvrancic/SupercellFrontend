@@ -1,0 +1,16 @@
+import React from 'react';
+
+// Crea un contexto con un valor predeterminado de false, lo que significa que el bloqueo de emergencia no está activado
+const LockdownContext = React.createContext(false);
+
+// Exporta un proveedor de contexto que acepta un valor inicial
+export function LockdownProvider({ children, value }) {
+  return (
+    <LockdownContext.Provider value={value}>
+      {children}
+    </LockdownContext.Provider>
+  );
+}
+
+// Exporta el contexto para que pueda ser consumido por otros componentes
+export default LockdownContext;
