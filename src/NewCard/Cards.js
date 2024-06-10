@@ -72,7 +72,9 @@ const NewCard = () => {
         </div>
       ) : (
         <div className="add-card-form">
+          <div className="header2">
           <h2>Add new card</h2>
+          </div>
           <form onSubmit={handleFormSubmit}>
             <div className="card-id-field">
               <p>Card ID: {newCardId ? newCardId : '...'}</p>
