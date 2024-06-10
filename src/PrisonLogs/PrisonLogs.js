@@ -11,7 +11,7 @@ function PrisonLogs() {
     const navigate = useNavigate();
   
     useEffect(() => {
-      axios.get('http://54.90.137.122:5000/api/show_cards')
+      axios.get('http://107.20.128.254:5000/api/show_cards')
         .then(response => {
           setCards(response.data);
         })
