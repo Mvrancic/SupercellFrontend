@@ -3,9 +3,27 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-const MenuContainer = styled.div`
+const Title = styled.h1`
   position: fixed;
   top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  padding: 20px 0;
+  font-size: 2em;
+  background-color: #f8f9fa;
+`;
+const StyledLink = styled(Link)`
+  color: black;
+  text-decoration: none;
+  &:hover {
+    color: blue;
+  }
+`;
+
+const MenuContainer = styled.div`
+  position: fixed;
+  top: 100px; // Ajusta esto según el tamaño de tu título
   left: 0;
   padding: 10px;
 `;
@@ -27,15 +45,19 @@ function Menu() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <MenuContainer>
-      <MenuButton onClick={() => setIsOpen(!isOpen)}>☰</MenuButton>
-      {isOpen && (
-        <MenuList>
-           <li><Link to="/emergency">Emergency</Link></li>
-          <li><Link to="/new-card">Agregar nueva tarjeta</Link></li>
-        </MenuList>
-      )}
-    </MenuContainer>
+    <>
+      <Title>Supercell Monitoring System</Title>
+      <MenuContainer>
+        <MenuButton onClick={() => setIsOpen(!isOpen)}>☰</MenuButton>
+        {isOpen && (
+           <MenuList>
+           <li><StyledLink to="/emergency">Emergency</StyledLink></li>
+           <li><StyledLink to="/new-card">Add new card</StyledLink></li>
+           <li><StyledLink to="/prison-logs">Prison logs</StyledLink></li>
+         </MenuList>
+        )}
+      </MenuContainer>
+    </>
   );
 }
 

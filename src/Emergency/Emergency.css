@@ -39,20 +39,26 @@
   
   
   .switch-button {
-    width: 40px; /* Aumenta el ancho */
-    height: 100px;
-    background-color: #555;
+    width: 50px; /* Aumenta el ancho */
+    height: 110px;
+    background-color: #7c7a7a;
     position: relative;
     border-radius: 20px; /* Aumenta el radio del borde para mantener la proporción */
     overflow: hidden;
   }
-  
+  .done-button {
+    width: 75px; /* Aumenta el ancho */
+    margin-left: 1000px; /* Ajusta el margen para que los botones estén separados */
+    margin-top: -100px; /* Ajusta el margen para que los botones estén separados */
+    height: 70px;
+    border-radius: 20px;
+  }
   .switch-button:before {
     content: "";
     position: absolute;
-    width: 40px; /* Aumenta el ancho */
+    width: 47px; /* Aumenta el ancho */
     height: 40px; /* Aumenta la altura para mantener la proporción */
-    background-color: #333;
+    background-color: #434242;
     top: 0;
     left: 0;
     border-radius: 50%;

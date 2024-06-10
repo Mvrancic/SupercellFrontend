@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import './Cards.css';
 
 
 const NewCard = () => {
@@ -14,7 +15,7 @@ const NewCard = () => {
     setLoading(true); // Activar el estado de carga al inicio de la solicitud
     try {
       // Realizar una solicitud al backend para obtener el último ID registrado
-      const response = await axios.get('http://54.197.206.2:5000/api/ultimoId'); //ip publica de instancia servidor
+      const response = await axios.get('http://44.223.65.159:5000/api/ultimoId'); //ip publica de instancia servidor
       if (response.data && response.data.tarjeta_id) {
         setNewCardId(response.data.tarjeta_id);
         setWaitingForCard(false); // Cambiar estado para dejar de esperar la tarjeta
@@ -39,11 +40,11 @@ const NewCard = () => {
     // Objeto con los datos de la nueva tarjeta RFID
     const nuevaTarjeta = {
       tarjeta_id: newCardId,
-      tipo: tipoTarjeta === '1' ? 'Tipo 1 (staff)' : 'Tipo 2 (prisionero)', 
+      tipo: tipoTarjeta === '1' ? 'Type 1 (staff)' : 'Type 2 (prisoner)', 
     };
 
     // Llama al backend para agregar la nueva tarjeta RFID
-    axios.post('http://54.197.206.2/api/agregar_tarjeta', nuevaTarjeta) //ip publica de instancia servidor
+    axios.post('http://44.223.65.159:5000/api/agregar_tarjeta', nuevaTarjeta) //ip publica de instancia servidor
       .then(response => {
         console.log('Respuesta del servidor:', response.data);
         setNewCardId('');
@@ -56,32 +57,37 @@ const NewCard = () => {
 
   return (
     <div className="building">
-              <button onClick={() => navigate('/')}>DONE</button>
-
+        <div className='goBack'>
+          <button onClick={() => navigate('/')}>Go Back</button>
+        </div>
       {waitingForCard ? (
         <div>
-          <p>Por favor, pase la tarjeta por el lector RFID...</p>
-          <button onClick={handleReadyClick} disabled={loading}>Listo</button>
-          {loading && <p>Cargando...</p>}
+          <div className="header1">
+          <p>Please, swipe your card through the RFID reader...</p>
+          </div>
+          <div className="done">
+          <button onClick={handleReadyClick} disabled={loading}>Done</button>
+          </div>
+          {loading && <p>loading...</p>}
         </div>
       ) : (
         <div className="add-card-form">
-          <h2>Agregar Nueva Tarjeta RFID</h2>
+          <h2>Add new card</h2>
           <form onSubmit={handleFormSubmit}>
             <div className="card-id-field">
-              <p>ID de Tarjeta RFID: {newCardId ? newCardId : '...'}</p>
+              <p>Card ID: {newCardId ? newCardId : '...'}</p>
             </div>
-            <label htmlFor="tipoTarjeta">Tipo de Tarjeta:</label>
+            <label htmlFor="tipoTarjeta">Type:</label>
             <select
               id="tipoTarjeta"
               name="tipoTarjeta"
               value={tipoTarjeta}
               onChange={(e) => setTipoTarjeta(e.target.value)}
             >
-              <option value="1">Staff (Tipo 1)</option>
-              <option value="2">Prisionero (Tipo 2)</option>
+              <option value="1">Staff (Type 1)</option>
+              <option value="2">Prisoner (Type 2)</option>
             </select>
-            <button type="submit">Agregar Tarjeta</button>
+            <button type="submit">Add new card</button>
           </form>
         </div>
       )}

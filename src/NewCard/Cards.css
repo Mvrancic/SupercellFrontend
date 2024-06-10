@@ -1,0 +1,63 @@
+.header1 {
+    text-align: center;
+    font-size: 2em;
+    padding: 20px 0;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .goBack {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+  }
+  
+  .goBack button {
+    font-size: 1.2em;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    cursor: pointer;
+  }
+  
+  .done {
+    position: absolute;
+    top: 80px; /* Ajusta esto según el tamaño de tu encabezado */
+    left: 50%; /* Centra el botón */
+    transform: translateX(-50%); /* Asegura que el botón esté perfectamente centrado */
+    transform: translateY(850%); /* Asegura que el botón esté perfectamente centrado */
+  }
+  
+  .done button {
+    font-size: 1.2em;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    cursor: pointer;
+  }
+  
+  .cards {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .cards button {
+    font-size: 1.2em;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    cursor: pointer;
+  }
+  
+  .cards button:hover {
+    background-color: #e2e6ea;
+  }
+  
+  .card {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+ }

@@ -1,11 +1,24 @@
 /* BuildingPlan.css */
+/* BuildingPlan.css */
+/* BuildingPlan.css */
 .grid-container {
-  display: grid;
-  grid-template-columns: 0 1fr 1fr 1fr; /* Make the first column have no width */
-  grid-template-rows: repeat(3, 1fr);
+  display: grid; /* Change to grid */
+  justify-content: center;
+  align-items: center;
+  height: 60vh; /* Reduce the height to leave space for the menu and title */
+  grid-template-columns: 12% 12% 12%; /* Make three columns of 12% width each */
+  grid-auto-rows: minmax(100px, auto); /* Set a minimum row height of 100px */
   gap: 10px;
-  margin-top: 50px; /* Add a top margin to move all cells down */
+  margin-top: 180px;/* Reduce the top margin to leave more space for the menu and title */
 }
+
+.menu, .title {
+  position: absolute; /* Change to absolute positioning */
+  top: 0; /* Position at the top of the page */
+  width: 100%; /* Ensure they take up the full width */
+  z-index: 2; /* Make the z-index higher than the image's */
+}
+
 
 .cell {
   border: 1px solid black;
@@ -33,4 +46,8 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   max-height: 80vh;
   overflow-y: auto;
+}
+
+.door-lockdown {
+  background-color: red;
 }
