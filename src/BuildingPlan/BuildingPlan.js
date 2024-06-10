@@ -21,7 +21,7 @@ function BuildingPlan() {
         .catch(error => {
           console.error('Error al obtener el estado de bloqueo de emergencia:', error);
         });
-    }, 5000);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, []);
