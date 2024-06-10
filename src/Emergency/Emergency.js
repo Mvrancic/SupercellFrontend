@@ -7,7 +7,7 @@ import './Emergency.css';
 function Emergency() {
   const navigate = useNavigate();
   const handleEmergencyClick = () => {
-    axios.post('http://5107.20.128.254:5000/api/emergency_lockdown', { lockdown: true })
+    axios.post('http://107.20.128.254:5000/api/emergency_lockdown', { lockdown: true })
   .then(response => {
     console.log(response.data);
   })
