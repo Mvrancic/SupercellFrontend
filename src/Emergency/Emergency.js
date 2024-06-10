@@ -7,7 +7,7 @@ import './Emergency.css';
 function Emergency() {
   const navigate = useNavigate();
   const handleEmergencyClick = () => {
-    axios.post('http://44.223.65.159:5000/api/emergency_lockdown', { lockdown: true })
+    axios.post('http://54.90.137.122:5000/api/emergency_lockdown', { lockdown: true })
   .then(response => {
     console.log(response.data);
   })
@@ -17,7 +17,7 @@ function Emergency() {
   };
 
   const handleSwitchClick = () => {
-    axios.post('http://44.223.65.159:5000/api/emergency_lockdown', { lockdown: false })
+    axios.post('http://54.90.137.122:5000/api/emergency_lockdown', { lockdown: false })
   .then(response => {
     console.log(response.data);
   })

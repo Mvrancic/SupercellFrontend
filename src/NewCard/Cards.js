@@ -15,7 +15,7 @@ const NewCard = () => {
     setLoading(true); // Activar el estado de carga al inicio de la solicitud
     try {
       // Realizar una solicitud al backend para obtener el último ID registrado
-      const response = await axios.get('http://44.223.65.159:5000/api/ultimoId'); //ip publica de instancia servidor
+      const response = await axios.get('http://54.90.137.122:5000/api/ultimoId'); //ip publica de instancia servidor
       if (response.data && response.data.tarjeta_id) {
         setNewCardId(response.data.tarjeta_id);
         setWaitingForCard(false); // Cambiar estado para dejar de esperar la tarjeta
@@ -44,7 +44,7 @@ const NewCard = () => {
     };
 
     // Llama al backend para agregar la nueva tarjeta RFID
-    axios.post('http://44.223.65.159:5000/api/agregar_tarjeta', nuevaTarjeta) //ip publica de instancia servidor
+    axios.post('http://54.90.137.122:5000/api/agregar_tarjeta', nuevaTarjeta) //ip publica de instancia servidor
       .then(response => {
         console.log('Respuesta del servidor:', response.data);
         setNewCardId('');
