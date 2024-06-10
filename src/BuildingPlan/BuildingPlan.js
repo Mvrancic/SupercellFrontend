@@ -14,7 +14,7 @@ function BuildingPlan() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      axios.get('http://107.20.128.254:5000/api/emergency_lockdown') //ip publica de instancia servidor
+      axios.get('http://34.227.111.125:5000/api/emergency_lockdown') //ip publica de instancia servidor
         .then(response => {
           setLockdown(response.data.lockdown);
         })
@@ -38,7 +38,7 @@ function BuildingPlan() {
   };
 
   const fetchRecords = () => {
-    axios.get('http://107.20.128.254:5000/api/show_records')
+    axios.get('http://34.227.111.125:5000/api/show_records')
       .then(response => {
         const sortedRecords = response.data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
         setRecords(sortedRecords);
